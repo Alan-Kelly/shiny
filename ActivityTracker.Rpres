@@ -1,0 +1,63 @@
+Activity Tracker Demonstration Application
+========================================================
+author: Alan Kelly
+date: `r date()`
+
+Introduction
+========================================================
+id: slide1
+
+This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
+
+
+
+Data File & Data Transformation
+========================================================
+
+
+The application reads the data from an "activity.csv" file. 
+The following R libraries are used: lubridate, dplyr and ggplot2   
+
+
+```{r libraries,echo=FALSE,results="hide",message=F, warning=F}
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+```
+
+The code
+========================================================
+ ```{r readdata }
+data<-read.csv("activity.csv")
+data$date<-ymd(data$date)
+stepsByDay <- data %>%
+  group_by(date) %>%
+  summarise(totalsteps = sum(steps))
+Mean<-mean(stepsByDay$totalsteps,na.rm=TRUE)
+
+```
+
+The plot
+========================================  
+The plot shows a sum of the total steps recorded on each day.
+
+```{r TotalSteps, echo=FALSE, fig.width=7, fig.height=6, warning=F}
+
+g<-ggplot(stepsByDay, aes(date,totalsteps)) 
+g+geom_point() + geom_bar(stat="identity",colour="red",fill="green")+
+  labs(title="Total Steps per Day")+
+  theme(axis.text.x=element_text(angle=-90))+
+  geom_line(aes(date,Mean,colour="Mean"))
+
+```
+
+Running the application
+=====================
+The application is running at: 
+https://alan-kelly.shinyapps.io/activitytracker/
+
+The interactive part of the application is the calculation and display of the mean value when that option is selected by the user.
+
+
+
+[Go to slide 1](#/slide1)
